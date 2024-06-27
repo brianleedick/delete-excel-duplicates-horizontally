@@ -1,0 +1,24 @@
+import pandas as pd
+
+# Load the Excel file
+file_path = "YOUR EXCEL FILE PATH HERE"
+df = pd.read_excel(file_path)
+
+# Save the original column headers
+original_headers = df.columns
+
+# Function to remove duplicates in each row
+def remove_horizontal_duplicates(row):
+    unique_values = row.drop_duplicates().values
+    return pd.Series(list(unique_values) + [pd.NA] * (len(row) - len(unique_values)))
+
+# Apply the function to each row
+df_cleaned = df.apply(remove_horizontal_duplicates, axis=1)
+
+# Restore the original headers
+df_cleaned.columns = original_headers
+
+# Save the cleaned DataFrame back to the same Excel file
+df_cleaned.to_excel(file_path, index=False)
+
+print("Duplicates removed horizontally and the file is overwritten, keeping original headers.")
